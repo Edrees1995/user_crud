@@ -1,0 +1,84 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+<div class="card mt-5">
+    <div class="card-header">
+        <h3 class="mb-0">{% if object %}Update{% else %}Create{% endif %} User</h3>
+    </div>
+    <div class="card-body">
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <!-- Username Field -->
+            <div class="mb-3">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+                {% if form.username.help_text %}
+                    <small class="form-text text-muted">{{ form.username.help_text }}</small>
+                {% endif %}
+                {% for error in form.username.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <!-- Password Field -->
+            <div class="mb-3">
+                {{ form.password.label_tag }}
+                <div class="input-group">
+                    {{ form.password }}
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-outline-secondary toggle-password"><i class="fas fa-eye"></i></button>
+                    </div>
+                </div>
+                {% if form.password.help_text %}
+                    <small class="form-text text-muted">{{ form.password.help_text }}</small>
+                {% endif %}
+                {% for error in form.password.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <!-- Active Checkbox Field -->
+            <div class="form-check mb-3">
+                {{ form.active }}
+                {{ form.active.label_tag }}
+                {% if form.active.help_text %}
+                    <small class="form-text text-muted">{{ form.active.help_text }}</small>
+                {% endif %}
+                {% for error in form.active.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <!-- Submit Button -->
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-success">
+                    {% if object %}
+                        <i class="fas fa-save"></i> Update
+                    {% else %}
+                        <i class="fas fa-plus"></i> Create
+                    {% endif %}
+                </button>
+                <a href="{% url 'users:user_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- JavaScript to toggle password visibility -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleButtons = document.querySelectorAll('.toggle-password');
+    toggleButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const input = this.parentElement.previousElementSibling;
+            if (input.type === 'password') {
+                input.type = 'text';
+                this.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            } else {
+                input.type = 'password';
+                this.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
